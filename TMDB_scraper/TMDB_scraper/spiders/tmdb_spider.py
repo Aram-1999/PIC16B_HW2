@@ -43,8 +43,12 @@ class TmdbSpider(scrapy.Spider):
         the actor has played in.
         """
         
+        # getting the actor's name
         actor_name=response.css("h2 a::text").get()
+        # getting a list of movies that the actor played in
         movie_or_TV_names=response.css("table bdi::text").getall()
+
+        # iterating through movies and yielding a dictionary
         for movie_or_TV_name in movie_or_TV_names:
             yield {
                 "actor": actor_name,
