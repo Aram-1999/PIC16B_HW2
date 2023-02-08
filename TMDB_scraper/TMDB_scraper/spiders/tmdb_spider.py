@@ -36,5 +36,18 @@ class TmdbSpider(scrapy.Spider):
             yield Request(next_page, callback = self.parse_actor_page)
 
     def parse_actor_page(self, response):
-        pass
+        """
+        This function yields a dictionary 
+        {"actor" : actor_name, "movie_or_TV_name" : movie_or_TV_name},
+        which is a dictionary of the movies or TV shows that 
+        the actor has played in.
+        """
+        
+        actor_name=response.css("h2 a::text").get()
+        movie_or_TV_names=response.css("table bdi::text").getall()
+        for movie_or_TV_name in movie_or_TV_names:
+            yield {
+                "actor": actor_name,
+                "movie_or_TV_name": movie_or_TV_name
+            }
         
