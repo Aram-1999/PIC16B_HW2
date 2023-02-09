@@ -26,14 +26,15 @@ class TmdbSpider(scrapy.Spider):
         calls parse_actor_page function for further parsing.
         """
         # gets the links to the cast members
-        cast_links=response.css('.panel.pad > ol > li > a::attr(href)').getall()
+        # it limits only to the first 50 cast members
+        cast_links=response.css('.panel.pad > ol > li > a::attr(href)').getall()[:50]
 
         # makes a full url link
-        next_pages = ["https://www.themoviedb.org" + link for link in cast_links]
+        #next_pages = ["https://www.themoviedb.org" + link for link in cast_links]
 
         # loops over actor pages
-        for next_page in next_pages:
-            yield Request(next_page, callback = self.parse_actor_page)
+        for next_page in cast_links:
+            yield Request("https://www.themoviedb.org" + next_page, callback = self.parse_actor_page)
 
     def parse_actor_page(self, response):
         """
